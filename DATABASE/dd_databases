@@ -1,0 +1,92 @@
+/*
+=================================================================================================
+dd_databases script:- CREATE TABLE BRONZE TABLES
+==================================================================================================
+
+dd_databases purpose:
+     This  script create tables in the "bronze" in the schema,droping existing tablesn if they
+     already exists.
+
+     Run this script to re-define the DDL structure od 'bronze' TABLES.
+==================================================================================================
+/*
+
+GO
+
+if object_id ('bronze','U')is not null
+drop table bronze;
+
+create table bronze(
+cst_id INT,
+cst_key NVARCHAR(50),
+cst_firstname NVARCHAR(50),
+cst_lastname NVARCHAR(50),
+cst_material_status NVARCHAR(50),
+cst_gndr NVARCHAR(50),
+cst_create_date DATE
+);
+
+select * from bronze;
+
+
+TRUNCATE TABLE bronze;
+
+BULK INSERT bronze
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+
+if OBJECT_ID('broze1',  'U')is not null
+drop table broze1;
+create table broze1(
+     prd_id INT,
+     prd_key NVARCHAR(50),
+     prd_nm NVARCHAR(50),
+     prd_cost INT,
+     prd_line NVARCHAR(50),
+     prd_start_dt DATETIME,
+     prd_end_dt DATETIME
+);
+
+
+if OBJECT_ID('broze2','U')IS NOT NULL
+drop table broze2;
+create table broze2(
+      sls_ord_num NVARCHAR(50),
+      sls_prd_key NVARCHAR(50),
+      sls_cust_id INT,
+      sls_order INT,
+      sls_ship_dt INT,
+      sls_due_dt INT,
+      sls_sales INT,
+      sls_quantity INT,
+      sls_prince INT
+);
+
+if OBJECT_ID('broze3','U')IS NOT NULL
+drop table broze3;
+  create table broze3(
+       cid NVARCHAR(50),
+       cntry NVARCHAR(50),
+);
+
+if OBJECT_ID('broze4','U')is not null
+drop table broze4;
+create table broze4(
+     cid NVARCHAR(50),
+     bdate DATE,
+     gen NVARCHAR(50)
+);
+
+
+if OBJECT_ID('broze5','U')is not null
+drop table broze5;
+create table broze5(
+     id NVARCHAR(50),
+     cat NVARCHAR(50),
+     subcat NVARCHAR(50),
+     mintaenance NVARCHAR(50),
+);
