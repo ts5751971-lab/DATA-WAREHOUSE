@@ -1,0 +1,124 @@
+/*
+================================================================================================
+
+STORED PROCEDURE: load bronze layer(SOURCE->BRONZE)
+
+=================================================================================================
+SCRIPT PURPOSE:
+     This stored procedure loads data into the 'BRONZE' schema form external CSV files.
+
+It perfrom the following actions:-
+     -Truncate the bronze tables before loading data
+     -Uses the 'BULK INSERT' command to load data from CSV files to bronze tables.
+
+PARAMETERS:-
+     None
+     This stored procedure does not accept any parameters or returned any values.
+
+USAGE EXAMPLE:-
+      EXEC Databases;
+==================================================================================================
+
+GO
+
+create or alter procedure Databases as
+begin
+DECLARE @start_batch DATETIME,@batch_end_time DATETIME;
+   BEGIN TRY
+ set @start_batch = GETDATE();  
+print'===========================';
+print'Loading Databases';
+print'===========================';
+
+print'---------------------------';
+print'Loading CRM Table';
+print'---------------------------';
+print'>> TRUNCATING TABLE: bronze';
+TRUNCATE TABLE bronze;
+print'INSERTING DATA INTO:bronze';
+BULK INSERT bronze
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+
+
+
+DECLARE @start_time datetime,@last_time datetime;
+print'>> TRUNCATING TABLE: broze1';
+TRUNCATE TABLE broze1;
+SET @start_time = GETDATE();
+print'INSERTING DATA INTO:broze1';
+BULK INSERT broze1
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+SET @last_time = GETDATE();
+print'loading DATETIME IN SECOND0S: ' + CAST(DATEDIFF(second,@start_time,@last_time) AS  NVARCHAR) + 'seconds';
+print'-----------------------------';
+
+
+print'>> TRUNCATING TABLE: broze2';
+TRUNCATE TABLE broze2;
+print'INSERTING DATA INTO:broze2';
+BULK INSERT broze2
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+
+print'---------------------------';
+print'Loading ERP Table';
+print'---------------------------';
+
+print'>> TRUNCATING TABLE: broze3';
+TRUNCATE TABLE broze3;
+print'INSERTING DATA INTO:broze3';
+BULK INSERT broze3
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+
+
+print'>> TRUNCATING TABLE: broze4';
+TRUNCATE TABLE broze4;
+print'INSERTING DATA INTO:broze4';
+BULK INSERT broze4
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+
+print'>> TRUNCATING TABLE: broze5';
+TRUNCATE TABLE broze5;
+print'INSERTING DATA INTO:broze5';
+BULK INSERT broze5
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+SET @batch_end_time = GETDATE();
+PRINT'=====================';
+PRINT'LOADING DATABASE LAYER IS COMPLETED :';
+PRINT'- TOTAL LOAD DURATION : ' + CAST(DATEDIFF(second,@start_batch,@batch_end_time) AS NVARCHAR) + 'second';
+print'=====================';
+END TRY 
+BEGIN CATCH
+     PRINT'ERROR OCCURED DURING LOADING DATABASES';
+     PRINT 'ERROR MESSAGE ' + ERROR_MESSAGE();
+END CATCH
+end 
