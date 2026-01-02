@@ -1,0 +1,91 @@
+/* 
+===============================================================================================
+DDL SCRIPT : CREATE sliver tables.
+===============================================================================================
+SCRIPT PURPOSE:
+                THIS SCRIPT CREATE TABLES IN THE 'sliver' schema dropping  existing tables if they
+                already exists.
+
+  IN this script to re-defined the DDL of 'bronze' tables.
+  ===============================================================================================
+  */
+GO
+
+
+if object_id ('sliver','U')is not null
+drop table sliver;
+
+create table sliver(
+cst_id INT,
+cst_key NVARCHAR(50),
+cst_firstname NVARCHAR(50),
+cst_lastname NVARCHAR(50),
+cst_material_status NVARCHAR(50),
+cst_gndr NVARCHAR(50),
+cst_create_date DATE
+);
+
+select * from sliver;
+
+
+TRUNCATE TABLE sliver;
+
+BULK INSERT sliver
+from 'C:\Users\ASUS\Downloads\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+with(
+     firstrow=2,
+     fieldterminator=',',
+     tablock
+);
+
+if OBJECT_ID('sliver1',  'U')is not null
+drop table sliver1;
+create table sliver1(
+     prd_id INT,
+     prd_key NVARCHAR(50),
+     prd_nm NVARCHAR(50),
+     prd_cost INT,
+     prd_line NVARCHAR(50),
+     prd_start_dt DATETIME,
+     prd_end_dt DATETIME
+);
+
+
+if OBJECT_ID('sliver2','U')IS NOT NULL
+drop table sliver2;
+create table sliver2(
+      sls_ord_num NVARCHAR(50),
+      sls_prd_key NVARCHAR(50),
+      sls_cust_id INT,
+      sls_order INT,
+      sls_ship_dt INT,
+      sls_due_dt INT,
+      sls_sales INT,
+      sls_quantity INT,
+      sls_prince INT
+);
+
+if OBJECT_ID('sliver3','U')IS NOT NULL
+drop table sliver3;
+  create table sliver3(
+       cid NVARCHAR(50),
+       cntry NVARCHAR(50),
+);
+
+if OBJECT_ID('sliver4','U')is not null
+drop table sliver4;
+create table sliver4(
+     cid NVARCHAR(50),
+     bdate DATE,
+     gen NVARCHAR(50)
+);
+
+
+if OBJECT_ID('sliver5','U')is not null
+drop table sliver5;
+create table sliver5(
+     id NVARCHAR(50),
+     cat NVARCHAR(50),
+     subcat NVARCHAR(50),
+     mintaenance NVARCHAR(50),
+);
